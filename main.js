@@ -39,6 +39,9 @@ const extractBearData = async (wikitext) => {
 
 //Initialization function
 const init = async () => {
+  toggleCommentsSection();
+  handleFormSubmission();
+
   try {
     const wikitext = await fetchBearData(title);
     const bears = await extractBearData(wikitext);
@@ -47,9 +50,6 @@ const init = async () => {
     console.error("Error initializing application:", error);
     document.querySelector('.more_bears').innerHTML = '<p>Error loading bear data. Please try again later.</p>';
   }
-
-  toggleCommentsSection();
-  handleFormSubmission();
 };
 
 // Start the app

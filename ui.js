@@ -7,10 +7,15 @@ const placeholderImage = "https://via.placeholder.com/200x200.png?text=Image+Not
 export const toggleCommentsSection = () => {
     const showHideBtn = document.querySelector('.show-hide');
     const commentWrapper = document.querySelector('.comment-wrapper');
-    const isVisible = commentWrapper.style.display === 'block';
 
-    commentWrapper.style.display = isVisible ? 'none' : 'block';
-    showHideBtn.textContent = isVisible ? 'Show comments' : 'Hide comments';
+    commentWrapper.style.display = 'none';
+    showHideBtn.textContent = 'Show comments';
+
+    showHideBtn.onclick = () => {
+        const isVisible = commentWrapper.style.display === 'block';
+        commentWrapper.style.display = isVisible ? 'none' : 'block';
+        showHideBtn.textContent = isVisible ? 'Show comments' : 'Hide comments';
+    };
 };
 
 export const renderBearData = async (bears) => {
@@ -37,13 +42,23 @@ export const renderBearData = async (bears) => {
 export const handleFormSubmission = () => {
     const form = document.querySelector('.comment-form');
     const list = document.querySelector('.comment-container');
+    const errorMessage = document.createElement('p');
+    errorMessage.style.color = 'red';
+    errorMessage.style.display = 'none';
+    errorMessage.textContent = 'Both name and comment are required.';
+    form.appendChild(errorMessage);
 
     form.onsubmit = (event) => {
         event.preventDefault();
         const name = form.elements['name'].value.trim();
         const comment = form.elements['comment'].value.trim();
 
-        if (!name || !comment) return;
+        if (!name || !comment) {
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        errorMessage.style.display = 'none';
 
         const listItem = document.createElement('li');
         listItem.innerHTML = `<p>${name}</p><p>${comment}</p>`;
