@@ -4,6 +4,7 @@ import { toggleCommentsSection, renderBearData, handleFormSubmission } from './u
 
 const title = "List_of_ursids";
 
+// Function to parse bear data from wikitext
 const extractBearData = async (wikitext) => {
   const speciesTables = wikitext.split('{{Species table/end}}');
   const bears = [];
@@ -36,6 +37,7 @@ const extractBearData = async (wikitext) => {
   return bears;
 };
 
+//Initialization function
 const init = async () => {
   try {
     const wikitext = await fetchBearData(title);
