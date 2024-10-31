@@ -1,13 +1,19 @@
-// main.js
-import {fetchBearData, fetchImageUrl} from './api.js';
-import { toggleCommentsSection, renderBearData, handleFormSubmission } from './ui.js';
+import {fetchBearData, fetchImageUrl} from './api.ts';
+import { toggleCommentsSection, renderBearData, handleFormSubmission } from './ui.ts';
+
+interface Bear {
+  name: string;
+  binomial: string;
+  image: string;
+  range: string;
+}
 
 const title = "List_of_ursids";
 
 // Function to parse bear data from wikitext
-const extractBearData = async (wikitext) => {
+const extractBearData = async (wikitext: string): Promise<Bear[]> => {
   const speciesTables = wikitext.split('{{Species table/end}}');
-  const bears = [];
+  const bears: Bear[] = [];
 
   for (const table of speciesTables) {
     const rows = table.split('{{Species table/row');
@@ -18,13 +24,11 @@ const extractBearData = async (wikitext) => {
       const rangeMatch = row.match(/\|range=([^|\n]+)/);
 
       if (nameMatch && binomialMatch && imageMatch) {
-        // Remove any bracketed text from the range value
         const rawRange = rangeMatch ? rangeMatch[1].trim() : "Range information not available";
         const range = rawRange.replace(/\s*\(.*?\)\s*/g, ''); // Removes text in brackets
-
         const imageUrl = await fetchImageUrl(imageMatch[1].trim().replace('File:', ''));
 
-        const bear = {
+        const bear: Bear = {
           name: nameMatch[1],
           binomial: binomialMatch[1],
           image: imageUrl,
@@ -37,20 +41,20 @@ const extractBearData = async (wikitext) => {
   return bears;
 };
 
-//Initialization function
-const init = async () => {
+// Initialization function
+const init = async (): Promise<void> => {
+  toggleCommentsSection();
+  handleFormSubmission();
+
   try {
     const wikitext = await fetchBearData(title);
     const bears = await extractBearData(wikitext);
     await renderBearData(bears);
   } catch (error) {
     console.error("Error initializing application:", error);
-    document.querySelector('.more_bears').innerHTML = '<p>Error loading bear data. Please try again later.</p>';
+    document.querySelector('.more_bears')!.innerHTML = '<p>Error loading bear data. Please try again later.</p>';
   }
-
-  toggleCommentsSection();
-  handleFormSubmission();
 };
 
-// Start the app
+// Start App
 init();
