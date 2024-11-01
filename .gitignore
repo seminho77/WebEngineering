@@ -7,11 +7,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build output
 dist
 dist-ssr
 build
 *.local
+
+# Ignore JavaScript files generated from TypeScript or bundlers
+*.js
+*.js.map
+
+# Explicitly include .eslintrc.js and other config files
+!.eslintrc.js
 
 # Editor directories and files
 .vscode/*
@@ -24,4 +34,5 @@ build
 *.sln
 *.sw?
 
+# Coverage directory
 coverage

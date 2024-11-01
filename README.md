@@ -208,7 +208,57 @@ Apply the following ruleset for Prettier:
 
 >  **What improvements in your codebase were introduced by using TS instead of JS? Name at least 3 and explain why.**
 
-Present your findings here...
+# How TypeScript Improved the Codebase
+
+Switching from JavaScript to TypeScript brought several great improvements to the code. Here are the main ones:
+
+### 1. Better Type Safety
+
+- **What Changed:** Started using explicit types and interfaces to define our data structures.
+- **Example:**
+
+```typescript
+  interface Bear {
+    name: string;
+    binomial: string;
+    image: string;
+    range: string;
+  }
+  ```
+
+- **Why it helps:** This means TypeScript can check that we're using data correctly. It catches mistakes like typos or wrong data types before we even run the code. This makes our code less buggy and more reliable.
+
+### 2. Improved Error Handling with Null Checks
+
+- **What Changed:** Added checks to make sure things aren't null or undefined before we use them.
+- **Example:**
+
+```typescript
+  const form = document.querySelector('.comment-form') as HTMLFormElement;
+if (form === null || list === null) {
+console.error('Form or comment container not found in the DOM');
+return;
+}
+```
+
+- **Why it helps:** This prevents errors that happen when we try to use something that doesn't exist. Our app becomes more stable and doesn't crash unexpectedly.
+
+## 3. Clearer Code with Type Annotations
+
+- **What Changed:** Specified what types the functions expect and return.
+- **Example:**
+
+```typescript
+export const fetchBearData = async (
+title: string,
+section = 3
+): Promise<string> => {
+// function code...
+}
+```
+- **Why it helps:** This makes the code easier to read and understand. When someone looks at a function, they immediately know what to pass in and what they'll get back. It also helps catch mistakes if we accidentally pass the wrong type.
+
+By moving to TypeScript, it can be said that the code is now safer and easier to work with, which helps spending less time debugging errors.
 
 ## 3.	CI/CD Pipeline Playground (5 Pts.)
 Implementation of a CI/CD pipeline to automate the development and deployment process – write automated tests.
