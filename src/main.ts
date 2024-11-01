@@ -1,5 +1,9 @@
-import {fetchBearData, fetchImageUrl} from './api.ts';
-import { toggleCommentsSection, renderBearData, handleFormSubmission } from './ui.ts';
+import { fetchBearData, fetchImageUrl } from './api';
+import {
+  toggleCommentsSection,
+  renderBearData,
+  handleFormSubmission,
+} from './ui';
 
 interface Bear {
   name: string;
@@ -8,7 +12,7 @@ interface Bear {
   range: string;
 }
 
-const title = "List_of_ursids";
+const title = 'List_of_ursids';
 
 // Function to parse bear data from wikitext
 const extractBearData = async (wikitext: string): Promise<Bear[]> => {
@@ -23,16 +27,21 @@ const extractBearData = async (wikitext: string): Promise<Bear[]> => {
       const imageMatch = row.match(/\|image=(.*?)\n/);
       const rangeMatch = row.match(/\|range=([^|\n]+)/);
 
-      if (nameMatch && binomialMatch && imageMatch) {
-        const rawRange = rangeMatch ? rangeMatch[1].trim() : "Range information not available";
+      if (nameMatch !== null && binomialMatch !== null && imageMatch !== null) {
+        const rawRange =
+          rangeMatch !== null && rangeMatch[1]?.trim() !== ''
+            ? rangeMatch[1].trim()
+            : 'Range information not available';
         const range = rawRange.replace(/\s*\(.*?\)\s*/g, ''); // Removes text in brackets
-        const imageUrl = await fetchImageUrl(imageMatch[1].trim().replace('File:', ''));
+        const imageUrl = await fetchImageUrl(
+          imageMatch[1].trim().replace('File:', '')
+        );
 
         const bear: Bear = {
           name: nameMatch[1],
           binomial: binomialMatch[1],
           image: imageUrl,
-          range: range
+          range,
         };
         bears.push(bear);
       }
@@ -51,10 +60,16 @@ const init = async (): Promise<void> => {
     const bears = await extractBearData(wikitext);
     await renderBearData(bears);
   } catch (error) {
-    console.error("Error initializing application:", error);
-    document.querySelector('.more_bears')!.innerHTML = '<p>Error loading bear data. Please try again later.</p>';
+    console.error('Error initializing application:', error);
+    const moreBearsSection = document.querySelector('.more_bears');
+    if (moreBearsSection !== null) {
+      moreBearsSection.innerHTML =
+        '<p>Error loading bear data. Please try again later.</p>';
+    }
   }
 };
 
 // Start App
-init();
+init().catch((error) => {
+  console.error('Initialization error:', error);
+});
