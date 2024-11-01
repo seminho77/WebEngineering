@@ -15,7 +15,7 @@ interface Bear {
 const title = 'List_of_ursids';
 
 // Function to parse bear data from wikitext
-const extractBearData = async (wikitext: string): Promise<Bear[]> => {
+export const extractBearData = async (wikitext: string): Promise<Bear[]> => {
   const speciesTables = wikitext.split('{{Species table/end}}');
   const bears: Bear[] = [];
 
