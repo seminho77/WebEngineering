@@ -1,3 +1,4 @@
+
 name: TypeScript Deployment Workflow
 
 on:
@@ -7,15 +8,15 @@ on:
 
 jobs:
   build-and-deploy:
-    needs: setup-test  # Waiting for finish of reusable workflow
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
+      # Reusing setup, lint, and test steps from the reusable workflow
       - name: Setup, Lint, and Test
-        uses: ./.github/workflows/setup-and-test.yml  # Calling reusable workflow
+        uses: ./.github/workflows/setup-and-test.yml
 
       - name: Build project
         run: npm run build
