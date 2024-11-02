@@ -1,4 +1,3 @@
-
 name: TypeScript Deployment Workflow
 
 on:
@@ -16,7 +15,9 @@ jobs:
 
       # Reusing setup, lint, and test steps from the reusable workflow
       - name: Setup, Lint, and Test
-        uses: ./.github/workflows/setup-and-test.yml
+        uses: seminho77/WebEngineering/.github/workflows/setup-and-test.yml@ts_dev
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build project
         run: npm run build
