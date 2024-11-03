@@ -52,11 +52,13 @@ export const renderBearData = async (
       bear.image !== '' ? bear.image : placeholderImage
     );
     const bearElement = document.createElement('div');
+    const isPlaceholder = imageUrl === placeholderImage;
+
     bearElement.innerHTML = `
-      <h4 class="bear-name">${bear.name} (${bear.binomial})</h4>
-      <img src="${imageUrl}" alt="${bear.name}" style="width:200px; height:auto;">
-      <p><strong>Range:</strong> ${bear.range}</p>
-    `;
+    <h4 class="bear-name">${bear.name} (${bear.binomial})</h4>
+    <img src="${imageUrl}" alt="${isPlaceholder ? 'No image available for ' + bear.name : ''}" style="width:200px; height:auto;">
+    <p><strong>Range:</strong> ${bear.range}</p>
+  `;
     moreBearsSection.appendChild(bearElement);
   }
 };
@@ -123,10 +125,34 @@ export function toggleTranscript(): void {
     'transcript-toggle'
   ) as HTMLButtonElement;
 
+  if (transcript === null || toggleButton === null) {
+    console.error('Transcript or toggle button not found in the DOM');
+    return;
+  }
+
+  let liveRegion = document.getElementById('live-region');
+  if (liveRegion === null) {
+    liveRegion = document.createElement('div');
+    liveRegion.id = 'live-region';
+    liveRegion.setAttribute('aria-live', 'assertive');
+    liveRegion.setAttribute('role', 'status');
+    liveRegion.style.position = 'absolute';
+    liveRegion.style.width = '1px';
+    liveRegion.style.height = '1px';
+    liveRegion.style.overflow = 'hidden';
+    liveRegion.style.clip = 'rect(1px, 1px, 1px, 1px)'; // Visually hidden
+    document.body.appendChild(liveRegion);
+  }
+
   const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
   toggleButton.setAttribute('aria-expanded', (!isExpanded).toString());
   transcript.hidden = isExpanded;
   toggleButton.textContent = isExpanded ? 'Show Transcript' : 'Hide Transcript';
+
+  // Update the live region to announce the state
+  liveRegion.textContent = isExpanded
+    ? 'Transcript closed.'
+    : 'Transcript opened. Use arrow keys to read the content.';
 }
 
 const toggleButton = document.getElementById('transcript-toggle');

@@ -612,6 +612,20 @@ const successMessage = new SpeechSynthesisUtterance(
 window.speechSynthesis.speak(successMessage);
 ```
 
+**Alt Text For Placeholder Images (When Image is Missing)**
+Here, if the image is missing, the alt text dynamically provides context by saying "No image available for [bear name]".
+This approach gives screen reader users helpful context about the image's availability while avoiding redundant or excessive information.
+```typescript
+const bearElement = document.createElement('div');
+const isPlaceholder = imageUrl === placeholderImage; 
+
+bearElement.innerHTML = `
+  <h4 class="bear-name">${bear.name} (${bear.binomial})</h4>
+  <img src="${imageUrl}" alt="${isPlaceholder ? 'No image available for ' + bear.name : ''}" style="width:200px; height:auto;">
+  <p><strong>Range:</strong> ${bear.range}</p>
+`;
+```
+
 # Extended Coding Playgrounds
 Please create a new independent Repository for these playgrounds and submit a link to it in the Moodle submission. 
 Additionally, provide a description of how to start your frontend and backend services inside the `README.md`.
