@@ -55,10 +55,10 @@ export const renderBearData = async (
     const isPlaceholder = imageUrl === placeholderImage;
 
     bearElement.innerHTML = `
-    <h4 class="bear-name">${bear.name} (${bear.binomial})</h4>
-    <img src="${imageUrl}" alt="${isPlaceholder ? 'No image available for ' + bear.name : ''}" style="width:200px; height:auto;">
-    <p><strong>Range:</strong> ${bear.range}</p>
-  `;
+  <h4 class="bear-name">${bear.name} (${bear.binomial})</h4>
+  <img src="${imageUrl}" alt="${isPlaceholder ? 'No image available for ' + bear.name : 'Image of ' + bear.name}" style="width:200px; height:auto;">
+  <p><strong>Range:</strong> ${bear.range}</p>
+`;
     moreBearsSection.appendChild(bearElement);
   }
 };
