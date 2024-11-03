@@ -150,7 +150,7 @@ const PLACEHOLDER_IMAGE = "https://via.placeholder.com/200";
 moreBearsSection.innerHTML += \`<img src="\${PLACEHOLDER_IMAGE}">\`;
  ```
 
-By implementing these fixes, the code is now cleaner, more readable, and more secure, adhering to modern JavaScript best practices.
+By implementing these fixes, the code is now cleaner, more readable, and more secure.
 
 
 
@@ -205,7 +205,7 @@ Apply the following ruleset for Prettier:
 
 >  **What improvements in your codebase were introduced by using TS instead of JS? Name at least 3 and explain why.**
 
-# How TypeScript Improved the Codebase
+## How TypeScript Improved the Codebase
 
 Switching from JavaScript to TypeScript brought several great improvements to the code. Here are the main ones:
 
@@ -223,7 +223,7 @@ Switching from JavaScript to TypeScript brought several great improvements to th
   }
   ```
 
-- **Why it helps:** This means TypeScript can check that we're using data correctly. It catches mistakes like typos or wrong data types before we even run the code. This makes our code less buggy and more reliable.
+- **Why it helps:** This means TypeScript can check that we're using data correctly. It catches mistakes like typos or wrong data types before we even run the code. This makes the code less buggy and more reliable.
 
 ### 2. Improved Error Handling with Null Checks
 
@@ -283,12 +283,12 @@ Test the current color contrast (text/background), report the results of the tes
 ## Accessibility Report: Color Contrast
 
 ### Findings
-Using the **WAVE** tool, we identified **44 contrast errors** on the page. These errors were primarily due to insufficient contrast between text and background colors in various sections of the HTML, particularly:
+Using the **WAVE** tool, I identified **44 contrast errors** on the page. These errors were primarily due to insufficient contrast between text and background colors in various sections of the HTML, particularly:
 - The header, where white text was displayed on a light background.
 - The navigation, article, footer, and secondary sections, where dark text was displayed on a relatively dark background.
 
 ### Fixes
-To address these contrast issues, we made the following adjustments:
+To address these contrast issues, I made the following adjustments:
 
 1. **Background of the HTML**: Darkened the background color to improve contrast with white text in the header.
 ```css
@@ -330,7 +330,7 @@ When pressing the `L` key to navigate through landmarks, the screen reader only 
 - **"The trouble with Bears"** (the article heading)
 - **Footer** ("© Copyright 2050 by nobody. All rights reversed.")
 
-The "Related" section was not recognized as a landmark, which limited users' ability to navigate efficiently.
+The "Related" section was not recognized as a landmark, which limits users' ability to navigate efficiently.
 
 **Solution Implemented:**
 
@@ -350,7 +350,7 @@ Added appropriate heading tags (`<h2>`, `<h3>`) to all sections to create a logi
 
 ### Tab Navigation
 
-Using the Tab key to navigate, the focus moved through the main menu at the top but then skipped directly to the audio player. It went through all audio elements and then jumped to the "Related" list on the right, ignoring the comment section, which should be interactive.
+Using the Tab key to navigate between interactive elements, the focus moved through the main menu at the top then to the audio player, as it should. It went through all audio elements and then jumped to the "Related" list on the right, ignoring the comment section, which should be interactive.
 
 **Solution Implemented:**
 
@@ -363,7 +363,7 @@ Using the Tab key to navigate, the focus moved through the main menu at the top 
 ### Text Content Structure
 
 **Issue:**  
-The original text content used `<br>` tags to create spacing between lines, simulating paragraphs. This approach is not semantically correct and caused issues with the screen reader, reading the text as one continuous block without appropriate pauses.
+The original text content used `<br>` tags to create spacing between lines, simulating paragraphs. This approach is not semantically correct and caused issues with the screen reader.
 
 **Solution Implemented:**  
 Replaced multiple `<br>` tags with `<p>` elements to properly structure the text into paragraphs. This enhances readability for screen readers by providing clear paragraph separations and improving the overall semantic structure of the content.
@@ -423,6 +423,18 @@ To address these issues, I added an accessible transcript toggle directly below 
   </div>
 </div>
 ```
+Al "live region" is used for announcements. The user is verbally informed that the transcript is open or closed when toggling the button.
+```typescript
+ const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+  toggleButton.setAttribute('aria-expanded', (!isExpanded).toString());
+  transcript.hidden = isExpanded;
+  toggleButton.textContent = isExpanded ? 'Show Transcript' : 'Hide Transcript';
+
+  liveRegion.textContent = isExpanded
+    ? 'Transcript closed.'
+    : 'Transcript opened. Use arrow keys to read the content.';
+}
+```
 
 **(1) Forms** 
   * The ``<input>`` element in the search form at the top could do with a label, but we don't want to add a visible text label that would potentially spoil the design and isn't really needed by sighted users. Fix this issue by adding a label that is only accessible to screen readers.
@@ -473,6 +485,8 @@ In the comment form, each input field is now clearly associated with its label u
 </div>
 
 ```
+To enhance the visual structure and usability of the form, I also added CSS rules that style .flex-pair, .comment-form label, and .comment-form input. These rules visually align each label with its respective input in a clear, accessible way.
+
 
 
 
@@ -482,9 +496,6 @@ In the comment form, each input field is now clearly associated with its label u
 The show/hide comment control button is not currently keyboard-accessible. Can you make it keyboard accessible, both in terms of focusing it using the tab key, and activating it using the return key?
 
 ## Accessibility Report: Comment Section Toggle Button
-
-### Requirement
-Ensure the "Show/Hide comments" toggle button is keyboard-accessible, allowing users to navigate and activate it with the Tab key and Return/Space keys.
 
 ### Solution and Implementation
 This functionality was already addressed as part of the semantic HTML adjustments. The toggle button for showing/hiding comments is implemented as a native `<button>` element, which naturally supports keyboard accessibility, enabling:
@@ -544,9 +555,7 @@ These improvements make the table much more accessible:
 
 **(1) More Findings**
 
-What other accessibility issues did you find? Explain how you did fix them.
-
-# #Accessibility Improvements and Fixes
+## Accessibility Improvements and Fixes
 
 **Button Hover Consistency**  
 To improve visual accessibility, I standardized the hover effect across all buttons, making it easier for users to identify interactive elements. This was done by adding a consistent background color change on hover:
@@ -581,18 +590,9 @@ For clarity, I added aria-label attributes to navigation links, providing a desc
     <li><a href="#" aria-label="Read our blog">Blog</a></li>
 </ul>
 ```
-**Button Hover Consistency**  
-To ensure a cohesive user experience, I applied a uniform hover effect to all button elements, including the `Go` button, `Show/Hide Comments` button, and `Submit Comment` button. This consistency helps users visually identify interactive elements more easily, enhancing usability.
-
-```css
-button:hover,
-input[type="submit"]:hover {
-  background-color: #435c52;
-}
-```
 
 **Accessible Form Feedback with ARIA Live Regions**  
-To improve screen reader accessibility, I implemented a dynamic ARIA live region for form feedback, ensuring consistent announcements for both error and success messages, which enhances accessibility for screen reader users.
+To improve screen reader accessibility, I implemented a dynamic ARIA live region for form feedback, ensuring consistent verbal announcements for both error and success messages (when trying to submit message), which enhances accessibility for screen reader users.
 
 ```typescript
 // Clear and reset error message to re-trigger screen reader announcement
@@ -613,8 +613,7 @@ window.speechSynthesis.speak(successMessage);
 ```
 
 **Alt Text For Placeholder Images (When Image is Missing)**
-Here, if the image is missing, the alt text dynamically provides context by saying "No image available for [bear name]".
-This approach gives screen reader users helpful context about the image's availability while avoiding redundant or excessive information.
+Here, if the image is missing, the alt text dynamically provides context by saying "No image available for [bear name]". This approach gives screen reader users helpful context about the image's availability while avoiding redundant or excessive information.
 ```typescript
 const bearElement = document.createElement('div');
 const isPlaceholder = imageUrl === placeholderImage; 
