@@ -150,11 +150,7 @@ const PLACEHOLDER_IMAGE = "https://via.placeholder.com/200";
 moreBearsSection.innerHTML += \`<img src="\${PLACEHOLDER_IMAGE}">\`;
  ```
 
-By implementing these fixes, the code is now cleaner, more readable, and more secure, adhering to modern JavaScript best practices.
-
-``` js
-console.log('Make use of markdown codesnippets to show and explain good/bad practices!')
-```
+By implementing these fixes, the code is now cleaner, more readable, and more secure.
 
 
 
