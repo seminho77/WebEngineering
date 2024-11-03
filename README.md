@@ -152,9 +152,6 @@ moreBearsSection.innerHTML += \`<img src="\${PLACEHOLDER_IMAGE}">\`;
 
 By implementing these fixes, the code is now cleaner, more readable, and more secure, adhering to modern JavaScript best practices.
 
-``` js
-console.log('Make use of markdown codesnippets to show and explain good/bad practices!')
-```
 
 
 
@@ -283,41 +280,337 @@ Use the tools presented in our accessibility workshop to test the accessibility 
 
 Test the current color contrast (text/background), report the results of the test, and then fix them by changing the assigned colors.
 
-*Present your reports here.*
+## Accessibility Report: Color Contrast
+
+### Findings
+Using the **WAVE** tool, we identified **44 contrast errors** on the page. These errors were primarily due to insufficient contrast between text and background colors in various sections of the HTML, particularly:
+- The header, where white text was displayed on a light background.
+- The navigation, article, footer, and secondary sections, where dark text was displayed on a relatively dark background.
+
+### Fixes
+To address these contrast issues, we made the following adjustments:
+
+1. **Background of the HTML**: Darkened the background color to improve contrast with white text in the header.
+```css
+   html {
+     font-size: 10px;
+     background-color: #52665f; /* Darker background for white header text */
+   }
+```
+2. **Background of Key Sections**: Lightened the background color for the div.nav, article, footer, and secondary sections to enhance readability of dark text.
+```css
+div[class='nav'],
+article,
+footer,
+.secondary {
+  background-color: #9ec2af; /* Lighter background for dark text */
+}
+```
+### Results
+After these adjustments:
+
+- All previously flagged elements now meet the **contrast ratio requirements**.
+- The **header text** now has a strong contrast ratio on the darker background.
+- Text within the **navigation, article, footer, and secondary sections** is more readable due to the lighter background.
 
 **(0.5) Semantic HTML**
 
-Report on what happens when you try to navigate the page using a screen reader. Fix those navigation issues.
+Report on what happens when you try to navigate the page using a screen reader (NVDA). Fix those navigation issues.
 
-*Present your reports here.*
+# Accessibility Report for Wildlife Website
+
+This report outlines the issues encountered when navigating the wildlife website using a screen reader and the solutions implemented to enhance accessibility.
+
+## Navigation Issues and Solutions
+
+### Landmark Navigation (`L` Key)
+
+When pressing the `L` key to navigate through landmarks, the screen reader only announced two landmarks:
+
+- **"The trouble with Bears"** (the article heading)
+- **Footer** ("© Copyright 2050 by nobody. All rights reversed.")
+
+The "Related" section was not recognized as a landmark, which limited users' ability to navigate efficiently.
+
+**Solution Implemented:**
+
+Wrapped the "Related" section in an `<aside>` element, defining it as complementary content. This semantic element is recognized as a landmark by screen readers, allowing users to navigate to the "Related" section using landmark navigation.
+
+---
+
+### Heading Navigation (`H` Key)
+
+Pressing the `H` key navigated directly to the "More Bears" section. The screen reader read only the panda names sequentially, stating each as a level 3 heading. Other important headings, such as "Types of bear," were not recognized because they were improperly marked up.
+
+**Solution Implemented:**
+
+Added appropriate heading tags (`<h2>`, `<h3>`) to all sections to create a logical heading structure. This allows screen readers to navigate through all sections effectively using heading navigation.
+
+---
+
+### Tab Navigation
+
+Using the Tab key to navigate, the focus moved through the main menu at the top but then skipped directly to the audio player. It went through all audio elements and then jumped to the "Related" list on the right, ignoring the comment section, which should be interactive.
+
+**Solution Implemented:**
+
+- Changed the "Show comments" toggle from a `<div>` to a `<button>` element, making it keyboard-accessible and focusable.
+- Ensured that all form fields within the comment section have associated `<label>` elements with `for` attributes matching the `id` of the input fields.
+- Updated the visibility and focus management of the comment form to include it in the Tab order when displayed.
+
+---
+
+### Text Content Structure
+
+**Issue:**  
+The original text content used `<br>` tags to create spacing between lines, simulating paragraphs. This approach is not semantically correct and caused issues with the screen reader, reading the text as one continuous block without appropriate pauses.
+
+**Solution Implemented:**  
+Replaced multiple `<br>` tags with `<p>` elements to properly structure the text into paragraphs. This enhances readability for screen readers by providing clear paragraph separations and improving the overall semantic structure of the content.
+
+**Reasoning:**
+- **Semantic HTML:** `<p>` elements clearly define paragraphs, providing meaningful structure to the content.
+- **Improved Accessibility:** Screen readers recognize `<p>` elements and provide appropriate pauses between paragraphs, enhancing readability.
+- **Best Practices:** Using `<p>` tags instead of `<br>` tags aligns with HTML standards and improves the overall code quality.
+---
+
+## Additional Enhancements
+
+- **Semantic HTML:** Utilized semantic elements such as `<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<aside>`, and `<footer>` to provide meaningful structure and landmarks for screen readers.
+
+- **Consistent Heading Levels:** Reviewed and corrected the heading levels to maintain a logical hierarchy, aiding in navigation and comprehension.
+
+- **Focus Management:** Implemented proper focus handling when dynamic content is revealed or updated, such as setting focus to the comment form when it becomes visible.
+
+- **ARIA Attributes:** Added ARIA attributes like `aria-live`, `aria-expanded`, and `aria-controls` to enhance interaction between dynamic content and assistive technologies.
+
+---
+
+## Conclusion
+
+By addressing these navigation issues and implementing the solutions, the website's accessibility has been significantly improved. Screen reader users can now effectively navigate the page using landmarks, headings, and keyboard navigation, ensuring a more inclusive and user-friendly experience.
+
 
 **(0.5) Audio** 
 
 The ``<audio>`` player isn't accessible to hearing impaired (deaf) people — can you add some kind of accessible alternative for these users?
 
-*Present your findings and fixes here.*
+## Audio Accessibility Report
+
+### Findings
+During accessibility testing of the `<audio>` element, I identified the following issues:
+
+1. **Lack of Transcript**: The audio content is not accessible to users who are deaf or hard of hearing, as there is no accompanying transcript or visual description of the audio content.
+2. **Limited User Control**: Although the audio player provides basic controls, there is no additional context or description to help users understand the significance of the audio content within the article.
+
+### Solution Implemented
+To address these issues, I added an accessible transcript toggle directly below the audio player. The transcript button allows users to view a written transcript of the audio content at their discretion, making the information accessible to those who are unable to hear the audio.
+
+```html
+<!-- Audio element with transcript toggle -->
+<div class="audio-container">
+  <audio controls aria-describedby="transcript-toggle">
+    <source src="media/bear.mp3" type="audio/mp3">
+    <source src="media/bear.ogg" type="audio/ogg">
+    <p>Your browser doesn't support HTML5 audio.</p>
+  </audio>
+  <button id="transcript-toggle" aria-expanded="false">Show Transcript</button>
+  <div id="transcript" hidden>
+    <h3>Audio Transcript</h3>
+    <p>
+      "This isn't really an audio fact file about bears, but it is an audio file that you can transcribe."
+    </p>
+  </div>
+</div>
+```
 
 **(1) Forms** 
   * The ``<input>`` element in the search form at the top could do with a label, but we don't want to add a visible text label that would potentially spoil the design and isn't really needed by sighted users. Fix this issue by adding a label that is only accessible to screen readers.
   * The two ``<input>`` elements in the comment form have visible text labels, but they are not unambiguously associated with their labels — how do you achieve this? Note that you'll need to update some of the CSS rule as well.
 
-*Present your findings and fixes here.*
+### Forms Accessibility Report
+
+#### Search Form: Screen Reader-Only Label
+
+To enhance accessibility, a hidden label was added to the search input in the navigation bar. This label, invisible to sighted users, is readable by screen readers, ensuring that users with visual impairments understand the input’s purpose without impacting the visual design.
+
+**HTML Implementation:**
+```html
+<label for="search" class="sr-only">Search for:</label>
+<form class="search">
+  <input type="search" name="q" id="search" placeholder="Search query">
+  <input type="submit" value="Go!">
+</form>
+```
+**CSS for .sr-only Class:**
+```css
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+```
+The `.sr-only` class hides the label visually but makes it accessible to screen readers, thus providing better context for users relying on assistive technology.
+
+#### Comment Form: Explicit Label-Input Association
+
+In the comment form, each input field is now clearly associated with its label using the `for` attribute, ensuring accessibility for screen reader users and better usability for keyboard navigation.
+
+**HTML Implementation:**
+```html
+<div class="flex-pair">
+    <label for="name">Your name:</label>
+    <input type="text" name="name" id="name" placeholder="Enter your name">
+</div>
+<div class="flex-pair">
+    <label for="comment">Your comment:</label>
+    <input type="text" name="comment" id="comment" placeholder="Enter your comment">
+</div>
+
+```
+
+
+
 
 **(0.5) Comment section**
 
 The show/hide comment control button is not currently keyboard-accessible. Can you make it keyboard accessible, both in terms of focusing it using the tab key, and activating it using the return key?
 
-*Present your findings and fixes here.*
+## Accessibility Report: Comment Section Toggle Button
+
+### Requirement
+Ensure the "Show/Hide comments" toggle button is keyboard-accessible, allowing users to navigate and activate it with the Tab key and Return/Space keys.
+
+### Solution and Implementation
+This functionality was already addressed as part of the semantic HTML adjustments. The toggle button for showing/hiding comments is implemented as a native `<button>` element, which naturally supports keyboard accessibility, enabling:
+
+- **Tab Navigation**: Users can focus on the button using the Tab key.
+- **Activation with Enter/Space**: As a native button, it responds to both Enter and Space for activation, ensuring seamless keyboard interaction.
+
+### Additional Accessibility Enhancements
+The button includes `aria-expanded` and `aria-controls` attributes to communicate the expanded/collapsed state and provide screen readers with context on the content it controls. Here’s how it was implemented:
+
+```html
+<button class="show-hide" aria-expanded="false" aria-controls="comment-wrapper">Show comments</button>
+```
+In the JavaScript logic:
+
+- `aria-expanded` is dynamically updated based on the button's state.
+- The button text changes between "Show comments" and "Hide comments" to indicate the action clearly.
 
 **(1) The table**
 
 The data table is not currently very accessible — it is hard for screen reader users to associate data rows and columns together, and the table also has no kind of summary to make it clear what it shows. Can you add some features to your HTML to fix this problem?
 
-*Present your findings and fixes here.*
+### Table Accessibility Improvements
+
+The table displaying bear characteristics was modified to enhance accessibility for screen reader users, ensuring that data rows and columns are easily understandable without impacting the visual layout.
+
+#### Problem
+The original table lacked accessible features, making it difficult for screen readers to associate rows and columns effectively. Additionally, there was no clear summary to describe what the table shows, potentially causing confusion for screen reader users.
+
+#### Solution
+1. **Scope Attributes**: Added `scope="col"` to header cells (`<th>`) in the `<thead>` and `scope="row"` to row header cells in the `<tbody>`. This allows screen readers to associate each data cell with its respective row and column headers, clarifying the relationship between data points.
+
+2. **Descriptive Caption**:
+    - A `<caption>` was added with a description: `"Comparison of different bear types, their habitats, and characteristics"`. This caption gives context to the table's content.
+    - The caption was styled with a visually hidden `sr-only` class so it is not visible on the page but still accessible to screen readers, enhancing accessibility without affecting the visual layout.
+
+#### CSS for Screen Reader-Only Content
+The following `sr-only` class was used to hide the caption visually:
+```css
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+```
+### Result
+These improvements make the table much more accessible:
+
+- **Screen Reader Caption**: Screen readers now announce the caption, providing a clear description of the table’s purpose without altering the visual layout.
+- **Enhanced Associations**: Row and column associations are clarified, making it easier for screen reader users to navigate and understand the table data in context.
 
 **(1) More Findings**
 
 What other accessibility issues did you find? Explain how you did fix them.
+
+# #Accessibility Improvements and Fixes
+
+**Button Hover Consistency**  
+To improve visual accessibility, I standardized the hover effect across all buttons, making it easier for users to identify interactive elements. This was done by adding a consistent background color change on hover:
+```css
+button:hover,
+input[type="submit"]:hover {
+  background-color: #435c52;
+}
+```
+**Landmark Roles for Semantic Structure**  
+To help screen reader users navigate through the content, I added semantic landmarks (role attributes) to key sections. This included adding role="main" for the primary content, role="navigation" for the nav bar, and role="complementary" for the related topics sidebar. This improves accessibility by allowing screen readers to quickly locate and announce sections of the page.
+```html
+<main role="main">
+    <!-- -->
+</main>
+
+<nav role="navigation">
+    <!-- -->
+</nav>
+
+<aside class="secondary" aria-labelledby="related-section" role="complementary">
+    <h2 id="related-section">Related</h2>
+</aside>
+```
+**Enhanced Link Accessibility with ARIA Labels**
+For clarity, I added aria-label attributes to navigation links, providing a description of each link’s purpose. Additionally, I added aria-current="page" to the "Home" link to inform users that it represents the current page.
+```html
+<ul>
+    <li><a href="#" aria-current="page" aria-label="Home page">Home</a></li>
+    <li><a href="#" aria-label="About our team">Our team</a></li>
+    <li><a href="#" aria-label="View our projects">Projects</a></li>
+    <li><a href="#" aria-label="Read our blog">Blog</a></li>
+</ul>
+```
+**Button Hover Consistency**  
+To ensure a cohesive user experience, I applied a uniform hover effect to all button elements, including the `Go` button, `Show/Hide Comments` button, and `Submit Comment` button. This consistency helps users visually identify interactive elements more easily, enhancing usability.
+
+```css
+button:hover,
+input[type="submit"]:hover {
+  background-color: #435c52;
+}
+```
+
+**Accessible Form Feedback with ARIA Live Regions**  
+To improve screen reader accessibility, I implemented a dynamic ARIA live region for form feedback, ensuring consistent announcements for both error and success messages, which enhances accessibility for screen reader users.
+
+```typescript
+// Clear and reset error message to re-trigger screen reader announcement
+if (name === '' || comment === '') {
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = ''; // Clear to reset announcement
+    setTimeout(() => {
+        errorMessage.textContent = 'Both name and comment are required.';
+    }, 10);
+    return;
+}
+
+// Success message spoken to confirm successful submission
+const successMessage = new SpeechSynthesisUtterance(
+    'Comment submitted successfully!'
+);
+window.speechSynthesis.speak(successMessage);
+```
 
 # Extended Coding Playgrounds
 Please create a new independent Repository for these playgrounds and submit a link to it in the Moodle submission. 

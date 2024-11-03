@@ -22,6 +22,7 @@ build
 
 # Explicitly include .eslintrc.js and other config files
 !.eslintrc.js
+!vite.config.js
 
 # Editor directories and files
 .vscode/*

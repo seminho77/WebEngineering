@@ -4,9 +4,9 @@ const placeholderImage =
   'https://via.placeholder.com/200x200.png?text=Image+Not+Available';
 
 export const toggleCommentsSection = (): void => {
-  const showHideBtn = document.querySelector('.show-hide') as HTMLDivElement;
-  const commentWrapper = document.querySelector(
-    '.comment-wrapper'
+  const showHideBtn = document.querySelector('.show-hide') as HTMLButtonElement;
+  const commentWrapper = document.getElementById(
+    'comment-wrapper'
   ) as HTMLDivElement;
 
   if (showHideBtn === null || commentWrapper === null) {
@@ -14,13 +14,20 @@ export const toggleCommentsSection = (): void => {
     return;
   }
 
-  commentWrapper.style.display = 'none';
+  commentWrapper.hidden = true;
   showHideBtn.textContent = 'Show comments';
+  showHideBtn.setAttribute('aria-expanded', 'false');
 
   showHideBtn.onclick = () => {
-    const isVisible = commentWrapper.style.display === 'block';
-    commentWrapper.style.display = isVisible ? 'none' : 'block';
-    showHideBtn.textContent = isVisible ? 'Show comments' : 'Hide comments';
+    const isExpanded = showHideBtn.getAttribute('aria-expanded') === 'true';
+    showHideBtn.setAttribute('aria-expanded', (!isExpanded).toString());
+    commentWrapper.hidden = isExpanded;
+    showHideBtn.textContent = isExpanded ? 'Show comments' : 'Hide comments';
+
+    if (!isExpanded) {
+      const nameInput = document.getElementById('name') as HTMLInputElement;
+      nameInput?.focus();
+    }
   };
 };
 
@@ -42,13 +49,11 @@ export const renderBearData = async (
 
   for (const bear of bears) {
     const imageUrl = await checkImageAvailability(
-      bear.image !== undefined && bear.image !== null && bear.image !== ''
-        ? bear.image
-        : placeholderImage
+      bear.image !== '' ? bear.image : placeholderImage
     );
     const bearElement = document.createElement('div');
     bearElement.innerHTML = `
-      <h3>${bear.name} (${bear.binomial})</h3>
+      <h4 class="bear-name">${bear.name} (${bear.binomial})</h4>
       <img src="${imageUrl}" alt="${bear.name}" style="width:200px; height:auto;">
       <p><strong>Range:</strong> ${bear.range}</p>
     `;
@@ -64,8 +69,11 @@ export const handleFormSubmission = (): void => {
     console.error('Form or comment container not found in the DOM');
     return;
   }
-  const errorMessage = document.createElement('p');
 
+  // ARIA live region for the error message
+  const errorMessage = document.createElement('p');
+  errorMessage.setAttribute('role', 'alert');
+  errorMessage.setAttribute('aria-live', 'assertive');
   errorMessage.style.color = 'red';
   errorMessage.style.display = 'none';
   errorMessage.textContent = 'Both name and comment are required.';
@@ -81,11 +89,25 @@ export const handleFormSubmission = (): void => {
     ).value.trim();
 
     if (name === '' || comment === '') {
+      // Display and announce the error message
       errorMessage.style.display = 'block';
+
+      // Reset the content briefly to ensure it’s announced each time
+      errorMessage.textContent = '';
+      setTimeout(() => {
+        errorMessage.textContent = 'Both name and comment are required.';
+      }, 10);
+
       return;
     }
 
     errorMessage.style.display = 'none';
+
+    // Verbally informing user of successful submission without displaying it
+    const successMessage = new SpeechSynthesisUtterance(
+      'Comment submitted successfully!'
+    );
+    window.speechSynthesis.speak(successMessage);
 
     const listItem = document.createElement('li');
     listItem.innerHTML = `<p>${name}</p><p>${comment}</p>`;
@@ -94,3 +116,18 @@ export const handleFormSubmission = (): void => {
     form.reset();
   };
 };
+
+export function toggleTranscript(): void {
+  const transcript = document.getElementById('transcript') as HTMLDivElement;
+  const toggleButton = document.getElementById(
+    'transcript-toggle'
+  ) as HTMLButtonElement;
+
+  const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+  toggleButton.setAttribute('aria-expanded', (!isExpanded).toString());
+  transcript.hidden = isExpanded;
+  toggleButton.textContent = isExpanded ? 'Show Transcript' : 'Hide Transcript';
+}
+
+const toggleButton = document.getElementById('transcript-toggle');
+toggleButton?.addEventListener('click', toggleTranscript);
